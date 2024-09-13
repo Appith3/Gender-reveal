@@ -1,11 +1,26 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import WelcomePage from "./components/WelcomePage";
+import ConfigPage from "./components/ConfigPage";
+import GamePage from "./components/GamePage";
+import FinalPage from "./components/FinalPage";
+import PlayerPage from "./components/PlayerPage";
 
-function App() {
-
+const App = () => {
   return (
-    <>
-      <h1 className="text-3xl font-bold underline">Hola mundo</h1>
-    </>
-  )
-}
+    <Router>
+      <Routes>
+        <Route path="/" element={<WelcomePage />} />
 
-export default App
+        <Route path="/config" element={<ConfigPage />} />
+
+        <Route path="/game" element={<GamePage />} />
+
+        <Route path="/final" element={<FinalPage />} />
+
+        <Route path="/player" element={<PlayerPage/>} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;

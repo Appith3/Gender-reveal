@@ -23,7 +23,7 @@ const ConfigPage = () => {
 					</button>
 
 					<button className='bg-white rounded-lg shadow-xl p-4 max-w-md w-full text-center hover:shadow-2xl hover:shadow-pink-500 hover:transition-shadow hover:duration-300 focus:shadow-2xl focus:shadow-pink-500'>
-						<img src='\images\boy.png' alt='boy' />
+						<img src='\images\girl.png' alt='girl' />
 						<h2 className='text-2xl'>Niña</h2>
 					</button>
 				</div>

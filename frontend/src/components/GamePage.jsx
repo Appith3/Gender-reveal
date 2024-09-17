@@ -21,6 +21,9 @@ const GamePage = () => {
 	const confettiForGirl = ['#ec4899', '#db2777', '#be185d', '#9d174d', '#831843']
 	const confettiForBoy = ['#3b82f6', '#2563eb', '#1d4ed8', '#1e40af', '#1e3a8a']
 
+	const isBoy = babyGender === 'niño'
+
+
   useEffect(() => {
     jsConfetti.current = new JSConfetti();
   }, []);
@@ -33,7 +36,7 @@ const GamePage = () => {
         if (newClicks >= ballonLife) {
 					play()
           jsConfetti.current.addConfetti({
-						confettiColors: babyGender === 'niño' ? confettiForBoy : confettiForGirl,
+						confettiColors: isBoy ? confettiForBoy : confettiForGirl,
 					}); 
         }
 
@@ -44,6 +47,19 @@ const GamePage = () => {
 
   return (
     <main className='flex flex-col gap-12 items-center justify-center h-screen bg-gray-100 m-0 p-0 overflow-hidden'>
+			{/* TODO: move animated-gradient to another file */}
+			<style jsx>{`
+        @keyframes gradient {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .animated-gradient {
+          background-size: 200% 200%;
+          animation: gradient 5s ease infinite;
+        }
+      `}</style>
+
 			<section className='absolute top-4 right-4'>
 				<span className='text-base font-semibold'>Id de la sesión: </span>
 				<span className='italic'>{sessionID}</span>
@@ -52,24 +68,28 @@ const GamePage = () => {
       <div className='absolute top-8'>
         <h1 className='text-3xl font-bold mb-4'>¡Haz clic en el globo para reventarlo!</h1>
 
-        <div className='w-full mt-6'>
-          <div className='w-full bg-gray-300 rounded-full h-6'>
-            <div
-              className={`h-6 rounded-full ${progress >= 100 ? 'bg-red-500' : progress >= 70 ? 'bg-orange-500' : 'bg-green-500'}`}
-              style={{ width: `${Math.min(progress, 100)}%` }}
-            ></div>
-          </div>
-        </div>
+        {
+					progress != 100 && (
+						<div className='w-full mt-6'>
+							<div className='w-full bg-gray-300 rounded-full h-6'>
+								<div
+									className={`h-6 rounded-full ${progress >= 100 ? 'bg-red-500' : progress >= 70 ? 'bg-orange-500' : 'bg-green-500'}`}
+									style={{ width: `${Math.min(progress, 100)}%` }}
+								></div>
+							</div>
+						</div>
+					)
+				}
       </div>
 
 			{
 				progress == 100
-				? (<h1 className={`text-4xl sm:text-6xl font-bold mb-8 ${
-							babyGender === 'niño' 
+				? (<h1 className={`text-4xl sm:text-6xl font-bold animated-gradient ${
+							isBoy
 								? 'bg-gradient-to-r from-blue-400 to-blue-600'
 								: 'bg-gradient-to-r from-pink-400 to-pink-600' 
 						} text-transparent bg-clip-text`}
-						aria-live="polite">¡Es un {babyGender}!</h1>)
+						aria-live="polite">¡Es {isBoy ? 'un' : 'una'} {babyGender}!</h1>)
 				: (
 					<motion.div
 						className='w-48 h-48 flex items-center justify-center cursor-pointer'

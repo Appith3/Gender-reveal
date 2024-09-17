@@ -36,6 +36,11 @@ const GamePage = () => {
 
   return (
     <main className='flex flex-col gap-12 items-center justify-center h-screen bg-gray-100 m-0 p-0 overflow-hidden'>
+			<section className='absolute top-4 right-4'>
+				<span className='text-base font-semibold'>Id de la sesión: </span>
+				<span className='italic'>123-456</span>
+			</section>
+
       <div className='absolute top-8'>
         <h1 className='text-3xl font-bold mb-4'>¡Haz clic en el globo para reventarlo!</h1>
 

@@ -1,22 +1,52 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+// player components
+import PlayerPage from './Pages/Player/PlayerPage';
+// host components
 import WelcomePage from "./Pages/Host/WelcomePage";
 import ConfigPage from "./Pages/Host/ConfigPage";
 import GamePage from "./Pages/Host/GamePage";
-import PlayerPage from "./Pages/Player/PlayerPage";
+import PlayerGamePage from "./Pages/Player/GamePage";
 
-const App = () => {
+function isMobileDevice() {
+  return /Mobi|Android/i.test(navigator.userAgent);
+}
+
+function PlayerRoutes() {
   return (
-    <Router>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<PlayerPage />} />
+        <Route path="/game" element={<PlayerGamePage />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+function HostRoutes() {
+  return (
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<WelcomePage />} />
-
         <Route path="/config" element={<ConfigPage />} />
-
         <Route path="/game" element={<GamePage />} />
-
-        <Route path="/player" element={<PlayerPage/>} />
       </Routes>
-    </Router>
+    </BrowserRouter>
+  );
+}
+
+const App = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(isMobileDevice());
+  }, []);
+
+  return (
+    <div>
+      {isMobile ? <PlayerRoutes /> : <HostRoutes />}
+    </div>
   );
 };
 

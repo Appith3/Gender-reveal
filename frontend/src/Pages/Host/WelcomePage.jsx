@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import QRCode from 'react-qr-code'
 
-import useGameStore from '../store/useGameStore'
+import useGameStore from '../../store/useGameStore'
 
 const WelcomePage = () => {
 	const sessionID = useGameStore((state) => state.sessionID);

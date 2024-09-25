@@ -1,9 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import WelcomePage from "./components/WelcomePage";
-import ConfigPage from "./components/ConfigPage";
-import GamePage from "./components/GamePage";
-import FinalPage from "./components/FinalPage";
-import PlayerPage from "./components/PlayerPage";
+import WelcomePage from "./Pages/Host/WelcomePage";
+import ConfigPage from "./Pages/Host/ConfigPage";
+import GamePage from "./Pages/Host/GamePage";
+import PlayerPage from "./Pages/Player/PlayerPage";
 
 const App = () => {
   return (
@@ -14,8 +13,6 @@ const App = () => {
         <Route path="/config" element={<ConfigPage />} />
 
         <Route path="/game" element={<GamePage />} />
-
-        <Route path="/final" element={<FinalPage />} />
 
         <Route path="/player" element={<PlayerPage/>} />
       </Routes>

@@ -2,10 +2,10 @@ import { motion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import useSound from 'use-sound';
 import JSConfetti from 'js-confetti';
-import useGameStore from '../store/useGameStore';
+import useGameStore from '../../store/useGameStore';
 
-import Ballon from './Ballon';
-import popSound from '../assets/audio/pop-sound.mp3';
+import Ballon from '../../assets/SVGs/Ballon';
+import popSound from '../../assets/audio/pop-sound.mp3';
 
 const GamePage = () => {
   const [clicks, setClicks] = useState(0);

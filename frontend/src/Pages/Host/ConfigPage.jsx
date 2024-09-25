@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import useGameStore from '../store/useGameStore'
+import useGameStore from '../../store/useGameStore'
 
 const ConfigPage = () => {
 	const setBabyGender = useGameStore((state) => state.setBabyGender)

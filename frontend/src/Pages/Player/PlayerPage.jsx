@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import ScanQr from '../../assets/SVGs/ScanQr'
+import Sonography from '../../assets/SVGs/Sonography'
 
 const PlayerPage = () => {
 	const [sessionCode, setSessionCode] = useState('')
@@ -12,6 +12,10 @@ const PlayerPage = () => {
 			</header>
 
 			<section className='flex flex-col gap-8 justify-center items-center'>
+				<button className='w-60 h-60 lg:w-96 lg:h-96 rounded-lg bg-sky-200 shadow-sm'>
+					<Sonography />
+				</button>
+
 				<div>
 					<label htmlFor="sessionCode" className="block text-sm lg:text-lg font-medium text-gray-700">
 						Código de la sesión

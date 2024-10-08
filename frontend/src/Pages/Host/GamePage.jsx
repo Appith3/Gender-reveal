@@ -14,36 +14,36 @@ const GamePage = () => {
 	const sessionID = useGameStore((state) => state.sessionID)
 	const babyGender = useGameStore((state) => state.babyGender)
 
-  	const ballonLife = 5;
-  	const progress = (clicks / ballonLife) * 100;
+	const ballonLife = 5;
+	const progress = (clicks / ballonLife) * 100;
 
-  	const jsConfetti = useRef(null);
+	const jsConfetti = useRef(null);
 	const confettiForGirl = ['#ec4899', '#db2777', '#be185d', '#9d174d', '#831843']
 	const confettiForBoy = ['#3b82f6', '#2563eb', '#1d4ed8', '#1e40af', '#1e3a8a']
 
 	const isBoy = babyGender === 'niño'
 
 
-  useEffect(() => {
-	jsConfetti.current = new JSConfetti();
-  }, []);
+	useEffect(() => {
+		jsConfetti.current = new JSConfetti();
+	}, []);
 
-  const handleClick = () => {
-	if (clicks < ballonLife) {
-	  setClicks(prev => {
-		const newClicks = prev + 1;
+	const handleClick = () => {
+		if (clicks < ballonLife) {
+		setClicks(prev => {
+			const newClicks = prev + 1;
 
-		if (newClicks >= ballonLife) {
-					play()
-		  jsConfetti.current.addConfetti({
-						confettiColors: isBoy ? confettiForBoy : confettiForGirl,
-					}); 
+			if (newClicks >= ballonLife) {
+				play()
+				jsConfetti.current.addConfetti({
+					confettiColors: isBoy ? confettiForBoy : confettiForGirl,
+				}); 
+			}
+
+			return newClicks;
+		});
 		}
-
-		return newClicks;
-	  });
-	}
-  };
+	};
 
 	return (
 		<main className='flex flex-col gap-12 items-center justify-center h-screen bg-gray-100 m-0 p-0 overflow-hidden'>
@@ -66,20 +66,20 @@ const GamePage = () => {
 			</section>
 
 			<div className='absolute top-8'>
-			<h1 className='text-3xl font-bold mb-4'>¡Haz clic en el globo para reventarlo!</h1>
+				<h1 className='text-3xl font-bold mb-4'>¡Haz clic en el globo para reventarlo!</h1>
 
-			{
-				progress != 100 && (
-					<div className='w-full mt-6'>
-						<div className='w-full bg-gray-300 rounded-full h-6'>
-							<div
-								className={`h-6 rounded-full ${progress >= 100 ? 'bg-red-500' : progress >= 70 ? 'bg-orange-500' : 'bg-green-500'}`}
-								style={{ width: `${Math.min(progress, 100)}%` }}
-							></div>
+				{
+					progress != 100 && (
+						<div className='w-full mt-6'>
+							<div className='w-full bg-gray-300 rounded-full h-6'>
+								<div
+									className={`h-6 rounded-full ${progress >= 100 ? 'bg-red-500' : progress >= 70 ? 'bg-orange-500' : 'bg-green-500'}`}
+									style={{ width: `${Math.min(progress, 100)}%` }}
+								></div>
+							</div>
 						</div>
-					</div>
-				)
-			}
+					)
+				}
 			</div>
 
 			{

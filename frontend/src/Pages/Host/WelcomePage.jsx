@@ -15,13 +15,13 @@ const WelcomePage = () => {
 			</section>
       <main className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
         <h1 className="text-3xl font-bold mb-4 text-gray-800">¿Es niño ó niña?</h1>
-        <p className="text-lg mb-6 text-gray-600">Bienvenido a este momento especial! Escanea el código QR o ingresa el código para jugar.</p>
+        <p className="text-lg mb-6 text-gray-600">Bienvenido a este momento especial! Escanea el código QR e ingresa el código para jugar.</p>
         
         <div className="mb-6">
 				<QRCode
 					size={256}
 					style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-					value={`http://192.168.0.104:5173/player?sessionId=${sessionID}`}
+					value={`http://192.168.0.101:5173/player?sessionId=${sessionID}`}
 					viewBox={`0 0 256 256`}
 				/>
         </div>

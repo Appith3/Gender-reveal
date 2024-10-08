@@ -25,50 +25,50 @@ const GamePage = () => {
 
 
   useEffect(() => {
-    jsConfetti.current = new JSConfetti();
+	jsConfetti.current = new JSConfetti();
   }, []);
 
   const handleClick = () => {
-    if (clicks < ballonLife) {
-      setClicks(prev => {
-        const newClicks = prev + 1;
+	if (clicks < ballonLife) {
+	  setClicks(prev => {
+		const newClicks = prev + 1;
 
-        if (newClicks >= ballonLife) {
+		if (newClicks >= ballonLife) {
 					play()
-          jsConfetti.current.addConfetti({
+		  jsConfetti.current.addConfetti({
 						confettiColors: isBoy ? confettiForBoy : confettiForGirl,
 					}); 
-        }
+		}
 
-        return newClicks;
-      });
-    }
+		return newClicks;
+	  });
+	}
   };
 
   return (
-    <main className='flex flex-col gap-12 items-center justify-center h-screen bg-gray-100 m-0 p-0 overflow-hidden'>
+	<main className='flex flex-col gap-12 items-center justify-center h-screen bg-gray-100 m-0 p-0 overflow-hidden'>
 			{/* TODO: move animated-gradient to another file */}
 			<style jsx>{`
-        @keyframes gradient {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .animated-gradient {
-          background-size: 200% 200%;
-          animation: gradient 5s ease infinite;
-        }
-      `}</style>
+		@keyframes gradient {
+		  0% { background-position: 0% 50%; }
+		  50% { background-position: 100% 50%; }
+		  100% { background-position: 0% 50%; }
+		}
+		.animated-gradient {
+		  background-size: 200% 200%;
+		  animation: gradient 5s ease infinite;
+		}
+	  `}</style>
 
 			<section className='absolute top-4 right-4'>
 				<span className='text-base font-semibold'>Id de la sesión: </span>
 				<span className='italic'>{sessionID}</span>
 			</section>
 
-      <div className='absolute top-8'>
-        <h1 className='text-3xl font-bold mb-4'>¡Haz clic en el globo para reventarlo!</h1>
+	  <div className='absolute top-8'>
+		<h1 className='text-3xl font-bold mb-4'>¡Haz clic en el globo para reventarlo!</h1>
 
-        {
+		{
 					progress != 100 && (
 						<div className='w-full mt-6'>
 							<div className='w-full bg-gray-300 rounded-full h-6'>
@@ -80,7 +80,7 @@ const GamePage = () => {
 						</div>
 					)
 				}
-      </div>
+	  </div>
 
 			{
 				progress == 100
@@ -100,8 +100,8 @@ const GamePage = () => {
 					</motion.div>
 				) 
 			}
-      
-    </main>
+	  
+	</main>
   );
 };
 

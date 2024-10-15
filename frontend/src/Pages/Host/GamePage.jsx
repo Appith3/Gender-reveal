@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import useSound from 'use-sound';
 import JSConfetti from 'js-confetti';
 import useGameStore from '../../store/useGameStore';
+import { CONFETTI_FOR_BOY, CONFETTI_FOR_GIRL } from '../../constants';
 
 import Ballon from '../../assets/SVGs/Ballon';
 import popSound from '../../assets/audio/pop-sound.mp3';
@@ -13,16 +14,13 @@ const GamePage = () => {
 
 	const sessionID = useGameStore((state) => state.sessionID)
 	const babyGender = useGameStore((state) => state.babyGender)
+	const ballonLife = useGameStore((state) => state.ballonLife)
 
-	const ballonLife = 5;
 	const progress = (clicks / ballonLife) * 100;
 
 	const jsConfetti = useRef(null);
-	const confettiForGirl = ['#ec4899', '#db2777', '#be185d', '#9d174d', '#831843']
-	const confettiForBoy = ['#3b82f6', '#2563eb', '#1d4ed8', '#1e40af', '#1e3a8a']
 
 	const isBoy = babyGender === 'niño'
-
 
 	useEffect(() => {
 		jsConfetti.current = new JSConfetti();
@@ -36,7 +34,7 @@ const GamePage = () => {
 			if (newClicks >= ballonLife) {
 				play()
 				jsConfetti.current.addConfetti({
-					confettiColors: isBoy ? confettiForBoy : confettiForGirl,
+					confettiColors: isBoy ? CONFETTI_FOR_BOY : CONFETTI_FOR_GIRL,
 				}); 
 			}
 

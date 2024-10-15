@@ -5,9 +5,10 @@ const useGameStore = create((set) => ({
 	sessionCode: 123456,
 	babyGender: '',
 	setBabyGender: (babyGender) => {
-		console.log('babyGender(store): ', babyGender);
 		set(() => ({babyGender: babyGender}))
-	}
+	},
+
+	ballonLife: 5
 }))
 
 export default useGameStore

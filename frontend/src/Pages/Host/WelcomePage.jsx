@@ -29,7 +29,7 @@ const WelcomePage = () => {
 						<QRCode
 							size={256}
 							style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-							value={`http://${process.env.VITE_IP}:5173/`}
+							value={`http://${import.meta.env.VITE_IP}:5173/`}
 							viewBox={`0 0 256 256`}
 						/>
 				</div>

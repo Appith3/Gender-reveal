@@ -2,10 +2,18 @@ import { Link } from 'react-router-dom'
 import QRCode from 'react-qr-code'
 
 import useGameStore from '../../store/useGameStore'
+import { createHostID } from '../../helpers/createHostID'
+import { useEffect } from 'react'
 
 const WelcomePage = () => {
-	const sessionID = useGameStore((state) => state.sessionID);
+	const sessionID = useGameStore((state) => state.sessionID)
 	const sessionCode = useGameStore((state) => state.sessionCode)
+	const hostId = useGameStore((state) => state.hostId)
+	const setHostId = useGameStore((state) => state.setHostId)
+
+	useEffect(() => {
+		hostId === '' && setHostId(createHostID())
+	}, [])
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-pink-100 to-blue-100 flex flex-col items-center justify-center p-4">
@@ -21,7 +29,7 @@ const WelcomePage = () => {
 						<QRCode
 							size={256}
 							style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-							value={`http://192.168.0.101:5173/player?sessionId=${sessionID}`}
+							value={`http://${process.env.VITE_IP}:5173/`}
 							viewBox={`0 0 256 256`}
 						/>
 				</div>

@@ -65,6 +65,9 @@ importers:
       tailwindcss:
         specifier: ^3.4.11
         version: 3.4.11
+      unique-names-generator:
+        specifier: ^4.7.1
+        version: 4.7.1
       use-sound:
         specifier: ^4.0.3
         version: 4.0.3(react@18.3.1)
@@ -3742,6 +3745,11 @@ packages:
   /undici@6.19.7:
     resolution: {integrity: sha512-HR3W/bMGPSr90i8AAp2C4DM3wChFdJPLrWYpIS++LxS8K+W535qftjt+4MyjNYHeWabMj1nvtmLIi7l++iq91A==}
     engines: {node: '>=18.17'}
+    dev: false
+
+  /unique-names-generator@4.7.1:
+    resolution: {integrity: sha512-lMx9dX+KRmG8sq6gulYYpKWZc9RlGsgBR6aoO8Qsm3qvkSJ+3rAymr+TnV8EDMrIrwuFJ4kruzMWM/OpYzPoow==}
+    engines: {node: '>=8'}
     dev: false
 
   /unpipe@1.0.0:

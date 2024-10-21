@@ -13,14 +13,14 @@ const ConfigPage = () => {
 
 	return (
 		<div className='min-h-screen bg-gradient-to-b from-pink-100 to-blue-100 flex flex-col items-center justify-center p-4'>
-			<section className='absolute top-4 right-4 flex flex-col'>
+			<section className='absolute top-4 right-4 flex flex-col border border-black rounded py-1 px-2 bg-cyan-300'>
 				<div>
 					<span className='text-base font-semibold'>Id de la sesión: </span>
 					<span className='italic'>{sessionID}</span>
 				</div>
 				<div>
-				<span className='text-base font-semibold'>Host id: </span>
-				<span className='italic'>{hostId}</span>
+					<span className='text-base font-semibold'>Host id: </span>
+					<span className='italic'>{hostId}</span>
 				</div>
 			</section>
 			<button className='absolute top-4 left-4 border border-black hover:bg-neutral-700 hover:text-white rounded-md text-black py-2 px-4'>

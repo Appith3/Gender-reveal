@@ -1,19 +1,31 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import QRCode from 'react-qr-code'
 
 import useGameStore from '../../store/useGameStore'
 import { createHostID } from '../../helpers/createHostID'
-import { useEffect } from 'react'
+import { createSessionCode } from '../../helpers/createSessionCode'
+import { createGame } from '../../firebase/gameService'
 
 const WelcomePage = () => {
 	const sessionID = useGameStore((state) => state.sessionID)
 	const sessionCode = useGameStore((state) => state.sessionCode)
+	const setSessionCode = useGameStore((state) => state.setSessionCode)
 	const hostId = useGameStore((state) => state.hostId)
 	const setHostId = useGameStore((state) => state.setHostId)
 
 	useEffect(() => {
-		hostId === '' && setHostId(createHostID())
-	}, [])
+		if (!hostId) {
+			const newHostId = createHostID()
+			setHostId(newHostId)
+			createGame(newHostId, sessionCode)
+		}
+	
+		if (!sessionCode) {
+			setSessionCode(createSessionCode())
+		}
+	}, [hostId, sessionCode])
+	
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-pink-100 to-blue-100 flex flex-col items-center justify-center p-4">

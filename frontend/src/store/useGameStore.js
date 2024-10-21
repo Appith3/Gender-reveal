@@ -11,7 +11,7 @@ const useGameStore = create((set) => ({
 		set(() => ({sessionID: id}))
 	},
 
-	sessionCode: null,
+	sessionCode: '',
 	setSessionCode: (code) => {
 		set(() => ({sessionCode: code}))
 	},

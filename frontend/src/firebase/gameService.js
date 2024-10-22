@@ -1,7 +1,7 @@
 import { collection, addDoc, doc, setDoc, Timestamp } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
-const createGame = async (hostId, sessionCode) => {
+const createGame = async (hostId, sessionCode, sessionId) => {
   try {
     const newGameRef = await addDoc(collection(db, "games"), {
       host: hostId,
@@ -17,6 +17,7 @@ const createGame = async (hostId, sessionCode) => {
 
     // Crear una sesión vinculada al juego
     await setDoc(doc(db, "sessions", newGameRef.id), {
+      sessionId: sessionId,
       gameId: newGameRef.id,
       isActive: true,
     });

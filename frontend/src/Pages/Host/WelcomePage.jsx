@@ -5,33 +5,44 @@ import QRCode from 'react-qr-code'
 import useGameStore from '../../store/useGameStore'
 import { createHostID } from '../../helpers/createHostID'
 import { createSessionCode } from '../../helpers/createSessionCode'
+import { createSessionId } from '../../helpers/createSessionId'
 import { createGame } from '../../firebase/gameService'
 
 const WelcomePage = () => {
-	const sessionID = useGameStore((state) => state.sessionID)
+	const sessionId = useGameStore((state) => state.sessionId)
+	const setSessionId = useGameStore((state) => state.setSessionId)
 	const sessionCode = useGameStore((state) => state.sessionCode)
 	const setSessionCode = useGameStore((state) => state.setSessionCode)
 	const hostId = useGameStore((state) => state.hostId)
 	const setHostId = useGameStore((state) => state.setHostId)
 
 	useEffect(() => {
-		if (!hostId) {
-			const newHostId = createHostID()
-			setHostId(newHostId)
-			createGame(newHostId, sessionCode)
-		}
-	
 		if (!sessionCode) {
 			setSessionCode(createSessionCode())
 		}
-	}, [hostId, sessionCode])
+	
+		if (!sessionId) {
+			setSessionId(createSessionId())
+		}
+	
+		if (!hostId) {
+			setHostId(createHostID())
+		}
+	}, [hostId, sessionCode, sessionId, setHostId, setSessionCode, setSessionId])
+	
+	// Nuevo useEffect para asegurarse de que los valores estén actualizados antes de ejecutar createGame
+	useEffect(() => {
+		if (hostId && sessionCode && sessionId) {
+			createGame(hostId, sessionCode, sessionId)
+		}
+	}, [hostId, sessionCode, sessionId])
 	
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-pink-100 to-blue-100 flex flex-col items-center justify-center p-4">
 			<section className="absolute top-4 right-4">
 				<span className='text-base font-semibold'>Id de la sesión: </span>
-				<span className='italic'>{sessionID}</span>
+				<span className='italic'>{sessionId}</span>
 			</section>
 			<main className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
 				<h1 className="text-3xl font-bold mb-4 text-gray-800">¿Es niño ó niña?</h1>

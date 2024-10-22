@@ -6,9 +6,9 @@ const useGameStore = create((set) => ({
 		set(() => ({hostId: id}))
 	},
 
-	sessionID: '',
-	setSessionID: (id) => {
-		set(() => ({sessionID: id}))
+	sessionId: '',
+	setSessionId: (id) => {
+		set(() => ({sessionId: id}))
 	},
 
 	sessionCode: '',

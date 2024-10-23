@@ -8,6 +8,7 @@ import WelcomePage from "./Pages/Host/WelcomePage";
 import ConfigPage from "./Pages/Host/ConfigPage";
 import GamePage from "./Pages/Host/GamePage";
 import PlayerGamePage from "./Pages/Player/GamePage";
+import LoginPage from "./Pages/Host/LoginPage";
 
 function isMobileDevice() {
 	return /Mobi|Android/i.test(navigator.userAgent);
@@ -28,7 +29,8 @@ function HostRoutes() {
 	return (
 		<BrowserRouter>
 			<Routes>
-				<Route path="/" element={<WelcomePage />} />
+				<Route path="/" element={<LoginPage />} />
+				<Route path="/welcome" element={<WelcomePage />} />
 				<Route path="/config" element={<ConfigPage />} />
 				<Route path="/game" element={<GamePage />} />
 			</Routes>

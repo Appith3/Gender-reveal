@@ -25,7 +25,6 @@ const createGame = async (hostId, sessionCode, sessionId) => {
       gameStatus: "waiting",
       balloonLife: 0, // Se ajustará más adelante según los jugadores
       createdAt: Timestamp.now(),
-      sessionCode: sessionCode, // Código generado previamente
       playersCount: 0,
       genderReveal: null,
       totalClicks: 0,
@@ -35,6 +34,7 @@ const createGame = async (hostId, sessionCode, sessionId) => {
     // Crear una sesión vinculada al juego
     await setDoc(doc(db, "sessions", sessionId), {
       sessionId: sessionId,
+      sessionCode: sessionCode, // Código generado previamente
       gameId: sessionId, // Usamos el mismo sessionId
       isActive: true,
     });

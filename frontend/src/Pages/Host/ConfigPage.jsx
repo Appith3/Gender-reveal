@@ -3,7 +3,7 @@ import useGameStore from '../../store/useGameStore'
 
 const ConfigPage = () => {
 	const setBabyGender = useGameStore((state) => state.setBabyGender)
-	const sessionID = useGameStore((state) => state.sessionID)
+	const sessionId = useGameStore((state) => state.sessionId)
 	const hostId = useGameStore((state) => state.hostId)
 
 	const handleClickGenderButton = (e) => {
@@ -13,21 +13,23 @@ const ConfigPage = () => {
 
 	return (
 		<div className='min-h-screen bg-gradient-to-b from-pink-100 to-blue-100 flex flex-col items-center justify-center p-4'>
-			<section className='absolute top-4 right-4 flex flex-col border border-black rounded py-1 px-2 bg-cyan-300'>
-				<div>
-					<span className='text-base font-semibold'>Id de la sesión: </span>
-					<span className='italic'>{sessionID}</span>
-				</div>
-				<div>
-					<span className='text-base font-semibold'>Host id: </span>
-					<span className='italic'>{hostId}</span>
-				</div>
-			</section>
-			<button className='absolute top-4 left-4 border border-black hover:bg-neutral-700 hover:text-white rounded-md text-black py-2 px-4'>
-				<Link to='/' className='text-base font-semibold'>
+			<section className='absolute top-4 flex flex-col-reverse gap-4 md:flex-row-reverse md:justify-around md:w-full'>
+				<section className='flex flex-col border border-black rounded py-1 px-2 bg-cyan-300'>
+					<div>
+						<span className='text-base font-semibold'>Id de la sesión: </span>
+						<span className='italic'>{sessionId}</span>
+					</div>
+					<div>
+						<span className='text-base font-semibold'>Host id: </span>
+						<span className='italic'>{hostId}</span>
+					</div>
+				</section>
+
+				<Link to='/' className='border border-black hover:bg-neutral-700 hover:text-white rounded-md text-black py-2 px-4 text-base font-semibold text-center md:h-fit'>
 					Regresar
 				</Link>
-			</button>
+			</section>
+
 			<main className='flex flex-col gap-8 justify-center items-center'>
 				<h1 className='text-3xl'>¿Es niño ó niña?</h1>
 				<div className='flex flex-row gap-12'>

@@ -38,6 +38,9 @@ const PlayerPage = () => {
 				<Link to='/game' className='py-2 px-4 w-full rounded-md bg-black text-white lg:hover:bg-neutral-700 text-base lg:text-lg text-center'>
 					Jugar
 				</Link>
+				<Link to='/login' className='py-2 px-4 w-full rounded-md border border-black lg:hover:bg-neutral-700 text-base lg:text-lg text-center'>
+					Soy Host
+				</Link>
 			</section>
 		</main>
 	)

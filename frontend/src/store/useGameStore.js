@@ -1,6 +1,12 @@
 import { create } from 'zustand'
 
 const useGameStore = create((set) => ({
+	isAuth: false,
+	setIsAuth: (authStatus) => set(() => ({ isAuth: authStatus })),
+
+	isMobile: false,
+	setIsMobile: (mobileStatus) => set(() => ({ isMobile: mobileStatus })),
+
 	hostId: '',
 	setHostId: (id) => {
 		set(() => ({hostId: id}))

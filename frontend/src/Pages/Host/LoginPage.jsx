@@ -9,12 +9,16 @@ const LoginPage = () => {
 
 	const setSessionId = useGameStore((state) => state.setSessionId)
 	const sessionId = useGameStore((state) => state.sessionId)
+	const setIsAuth = useGameStore((state) => state.setIsAuth)
+	const isMobile = useGameStore((state) => state.isMobile);
 
   const handleJoinSession = async () => {
     try {
       const sessionData = await fetchSessionData(sessionId);
-			console.log('sessionData: ', sessionData);
-      navigate(`/welcome/?sessionId=${sessionData.gameId}`);
+			setIsAuth(true)
+      !isMobile 
+				? navigate(`/welcome/?sessionId=${sessionData.gameId}`)
+				: navigate(`/config`);
     } catch (error) {
       setError(error.message);
     }
@@ -32,7 +36,7 @@ const LoginPage = () => {
         
         <div className="mb-6">
           <h2 className="text-lg font-semibold text-gray-700 mb-2">¿Ya tienes un código de sesión?</h2>
-          <div className="flex space-x-2">
+          <div className="flex md:flex-row flex-col md:space-x-2 space-y-2">
             <input
               type="text"
               placeholder="Ingresa el código de sesión"
@@ -44,7 +48,7 @@ const LoginPage = () => {
               onClick={handleJoinSession}
               className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
             >
-              Unirme
+              Entrar a la sesión
             </button>
           </div>
           {error && (
@@ -52,15 +56,20 @@ const LoginPage = () => {
           )}
         </div>
         
-        <div className="text-center">
-          <h2 className="text-lg font-semibold text-gray-700 mb-2">¿No tienes un juego?</h2>
-          <button
-            onClick={handleCreateGame}
-            className="px-4 py-2 border border-purple-600 text-purple-600 rounded-md hover:bg-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
-          >
-            Crear nuevo juego
-          </button>
-        </div>
+				{
+					!isMobile ? (
+						<div className="text-center">
+							<h2 className="text-lg font-semibold text-gray-700 mb-2">¿No tienes un juego?</h2>
+							<button
+								onClick={handleCreateGame}
+								className="px-4 py-2 border border-purple-600 text-purple-600 rounded-md hover:bg-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
+							>
+								Crear nuevo juego
+							</button>
+						</div>
+					) : null
+				}
+        
       </div>
     </div>
   );

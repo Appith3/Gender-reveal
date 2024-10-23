@@ -30,13 +30,11 @@ const WelcomePage = () => {
 		}
 	}, [hostId, sessionCode, sessionId, setHostId, setSessionCode, setSessionId])
 	
-	// Nuevo useEffect para asegurarse de que los valores estén actualizados antes de ejecutar createGame
 	useEffect(() => {
 		if (hostId && sessionCode && sessionId) {
 			createGame(hostId, sessionCode, sessionId)
 		}
 	}, [hostId, sessionCode, sessionId])
-	
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-pink-100 to-blue-100 flex flex-col items-center justify-center p-4">

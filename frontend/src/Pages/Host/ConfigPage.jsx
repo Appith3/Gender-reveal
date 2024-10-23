@@ -1,14 +1,27 @@
 import { Link } from 'react-router-dom'
 import useGameStore from '../../store/useGameStore'
+import { updateGender } from '../../firebase/gameService'
+import { useState } from 'react'
 
 const ConfigPage = () => {
-	const setBabyGender = useGameStore((state) => state.setBabyGender)
-	const sessionId = useGameStore((state) => state.sessionId)
-	const hostId = useGameStore((state) => state.hostId)
+	const [buttonMessage, setButtonMessage] = useState('Una vez guardada la selección ya no se puede cambiar')
+
+	const babyGender = useGameStore((state) => state.babyGender);
+	const setBabyGender = useGameStore((state) => state.setBabyGender);
+	const sessionId = useGameStore((state) => state.sessionId);
+	const hostId = useGameStore((state) => state.hostId);
 
 	const handleClickGenderButton = (e) => {
 		let gender = e.target.title;
-		setBabyGender(gender)
+		setBabyGender(gender);
+	}
+
+	const handleSaveGender = () => {
+		if(babyGender) {
+			updateGender(sessionId, babyGender)
+		} else {
+			setButtonMessage('Primero debe elegir un genero para el bebé')
+		}
 	}
 
 	return (
@@ -43,9 +56,16 @@ const ConfigPage = () => {
 						<h2 className='text-2xl'>Niña</h2>
 					</button>
 				</div>
+
+				<section>
+					<button className='border border-black hover:bg-neutral-700 hover:text-white rounded-md text-black py-2 px-4 text-base font-semibold text-center w-full' onClick={handleSaveGender}>Guardar elección</button>
+					<p className='text-base font-light'>{buttonMessage}</p>
+				</section>
 			</main>
+			
+
     </div>
-	)
+	);
 }
 
 export default ConfigPage

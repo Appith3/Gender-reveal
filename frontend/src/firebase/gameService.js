@@ -45,4 +45,17 @@ const createGame = async (hostId, sessionCode, sessionId) => {
   }
 };
 
-export { createGame, fetchSessionData }
+const updateGender = async (sessionId, gender) => {
+  try {
+    const gameRef = doc(db, "games", sessionId);
+    
+    await setDoc(gameRef, { genderReveal: gender }, { merge: true });
+
+    console.log("Género actualizado a: ", gender);
+  } catch (error) {
+    console.error("Error al actualizar el género: ", error);
+    throw error;
+  }
+};
+
+export { createGame, fetchSessionData, updateGender }

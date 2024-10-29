@@ -31,12 +31,11 @@ const createGame = async (hostId, sessionCode, sessionId) => {
     await setDoc(gameRef, {
       host: hostId,
       gameStatus: "waiting",
-      balloonLife: 0, // Se ajustará más adelante según los jugadores
+      balloonLife: 0, // (gameDuration * 60) * numPlayers * AverageClicksPerSecond
       createdAt: Timestamp.now(),
       playersCount: 0,
       genderReveal: null,
-      totalClicks: 0,
-      endTime: null,
+      gameDuration: null, // de 3 a 15 minutos
     });
 
     // Crear una sesión vinculada al juego

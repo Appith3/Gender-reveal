@@ -31,8 +31,8 @@ const useGameStore = create((set) => ({
   babyGender: '',
   setBabyGender: (babyGender) => set(() => ({ babyGender: babyGender })),
 
-  ballonLife: 5,
-  setBallonLife: (life) => set(() => ({ ballonLife: life })),
+  balloonLife: 1,
+  setBalloonLife: (life) => set(() => ({ balloonLife: life })),
 }));
 
 export default useGameStore;

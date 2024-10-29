@@ -1,40 +1,49 @@
-import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import QRCode from 'react-qr-code'
+import { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import QRCode from 'react-qr-code';
 
-import useGameStore from '../../store/useGameStore'
-import { createHostID } from '../../helpers/createHostID'
-import { createSessionCode } from '../../helpers/createSessionCode'
-import { createSessionId } from '../../helpers/createSessionId'
-import { createGame } from '../../firebase/gameService'
+import useGameStore from '../../store/useGameStore';
+import { createHostID } from '../../helpers/createHostID';
+import { createSessionCode } from '../../helpers/createSessionCode';
+import { createSessionId } from '../../helpers/createSessionId';
+import { createGame } from '../../firebase/gameService';
 
 const WelcomePage = () => {
-	const sessionId = useGameStore((state) => state.sessionId)
-	const setSessionId = useGameStore((state) => state.setSessionId)
-	const sessionCode = useGameStore((state) => state.sessionCode)
-	const setSessionCode = useGameStore((state) => state.setSessionCode)
-	const hostId = useGameStore((state) => state.hostId)
-	const setHostId = useGameStore((state) => state.setHostId)
+	const navigate = useNavigate();
+
+	const sessionId = useGameStore((state) => state.sessionId);
+	const setSessionId = useGameStore((state) => state.setSessionId);
+	const sessionCode = useGameStore((state) => state.sessionCode);
+	const setSessionCode = useGameStore((state) => state.setSessionCode);
+	const hostId = useGameStore((state) => state.hostId);
+	const setHostId = useGameStore((state) => state.setHostId);
+	const isAuth = useGameStore((state) => state.isAuth);
+	const setIsAuth = useGameStore((state) => state.setIsAuth);
 
 	useEffect(() => {
-		if (!sessionCode) {
-			setSessionCode(createSessionCode())
+		// Verifica si ya está autenticado
+		if (isAuth && hostId) {
+			navigate(`/welcome/?sessionId=${sessionId}`)
+			return;
 		}
-	
-		if (!sessionId) {
-			setSessionId(createSessionId())
-		}
-	
+
+		// Crear valores si no existen
+		if (!sessionCode) setSessionCode(createSessionCode());
+		if (!sessionId) setSessionId(createSessionId());
 		if (!hostId) {
-			setHostId(createHostID())
+			const newHostId = createHostID();
+			setHostId(newHostId);
+			setIsAuth(true);  // Marca como autenticado
 		}
-	}, [hostId, sessionCode, sessionId, setHostId, setSessionCode, setSessionId])
-	
+	}, [isAuth, hostId, sessionCode, sessionId, setHostId, setIsAuth, setSessionCode, setSessionId]);
+
 	useEffect(() => {
 		if (hostId && sessionCode && sessionId) {
-			createGame(hostId, sessionCode, sessionId)
+			createGame(hostId, sessionCode, sessionId);
 		}
-	}, [hostId, sessionCode, sessionId])
+	}, [hostId, sessionCode, sessionId]);
+
+	const qrValue = `http://${window.location.host}/`;
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-pink-100 to-blue-100 flex flex-col items-center justify-center p-4">
@@ -47,23 +56,23 @@ const WelcomePage = () => {
 				<p className="text-lg mb-6 text-gray-600">Bienvenido a este momento especial! Escanea el código QR e ingresa el código para jugar.</p>
 				
 				<div className="mb-6">
-						<QRCode
-							size={256}
-							style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-							value={`http://${import.meta.env.VITE_IP}:5173/`}
-							viewBox={`0 0 256 256`}
-						/>
+					<QRCode
+						size={256}
+						style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+						value={qrValue}
+						viewBox={`0 0 256 256`}
+					/>
 				</div>
 				
-					<label htmlFor="gameCode" className="block font-semibold text-4xl text-gray-700 mb-6">
-						Código: {sessionCode}
-					</label>
+				<label htmlFor="gameCode" className="block font-semibold text-4xl text-gray-700 mb-6">
+					Código: {sessionCode}
+				</label>
 
-					<button className="w-full bg-black hover:bg-neutral-700 rounded-md text-white py-2 px-4">
-						<Link to="/game" className='text-xl'>
-							Comenzar el juego
-						</Link>
-					</button>
+				<button className="w-full bg-black hover:bg-neutral-700 rounded-md text-white py-2 px-4">
+					<Link to="/game" className='text-xl'>
+						Comenzar el juego
+					</Link>
+				</button>
 			</main>
 			<button className="absolute top-4 left-4 border border-black hover:bg-neutral-700 hover:text-white rounded-md text-black py-2 px-4">
 				<Link to="/config" className='text-lg'>
@@ -71,7 +80,7 @@ const WelcomePage = () => {
 				</Link>
 			</button>
 		</div>
-	)
-}
+	);
+};
 
-export default WelcomePage
+export default WelcomePage;

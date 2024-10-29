@@ -1,24 +1,44 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchSessionData } from '../../firebase/gameService';
-import useGameStore from '../../store/useGameStore'
+import useGameStore from '../../store/useGameStore';
 
 const LoginPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-	const setSessionId = useGameStore((state) => state.setSessionId)
-	const sessionId = useGameStore((state) => state.sessionId)
-	const setIsAuth = useGameStore((state) => state.setIsAuth)
-	const isMobile = useGameStore((state) => state.isMobile);
+  const setSessionId = useGameStore((state) => state.setSessionId);
+  const sessionId = useGameStore((state) => state.sessionId);
+  const setIsAuth = useGameStore((state) => state.setIsAuth);
+  const isMobile = useGameStore((state) => state.isMobile);
+  const storedSessionId = localStorage.getItem('sessionId'); // Recupera el sessionId desde localStorage
+
+  useEffect(() => {
+    // Verifica si hay un sessionId guardado y redirige automáticamente si es válido
+    const autoLogin = async () => {
+      if (storedSessionId) {
+        try {
+          const sessionData = await fetchSessionData(storedSessionId);
+          setSessionId(sessionData.gameId);
+          setIsAuth(true);
+          navigate(`/welcome/?sessionId=${sessionData.gameId}`);
+        } catch (error) {
+          setError('Error al cargar la sesión. Verifica el código.');
+        }
+      }
+    };
+    autoLogin();
+  }, [navigate, storedSessionId, setIsAuth, setSessionId]);
 
   const handleJoinSession = async () => {
     try {
       const sessionData = await fetchSessionData(sessionId);
-			setIsAuth(true)
-      !isMobile 
-				? navigate(`/welcome/?sessionId=${sessionData.gameId}`)
-				: navigate(`/config`);
+      setIsAuth(true);
+      // Guarda el sessionId en localStorage para futuras visitas
+      localStorage.setItem('sessionId', sessionData.gameId);
+      !isMobile
+        ? navigate(`/welcome/?sessionId=${sessionData.gameId}`)
+        : navigate(`/config`);
     } catch (error) {
       setError(error.message);
     }
@@ -33,7 +53,7 @@ const LoginPage = () => {
       <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">Revelación de Género</h1>
         <p className="text-center text-gray-600 mb-6">¡Bienvenido a nuestro juego especial!</p>
-        
+
         <div className="mb-6">
           <h2 className="text-lg font-semibold text-gray-700 mb-2">¿Ya tienes un código de sesión?</h2>
           <div className="flex md:flex-row flex-col md:space-x-2 space-y-2">
@@ -51,28 +71,23 @@ const LoginPage = () => {
               Entrar a la sesión
             </button>
           </div>
-          {error && (
-            <p className="mt-2 text-red-600 text-sm">{error}</p>
-          )}
+          {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}
         </div>
-        
-				{
-					!isMobile ? (
-						<div className="text-center">
-							<h2 className="text-lg font-semibold text-gray-700 mb-2">¿No tienes un juego?</h2>
-							<button
-								onClick={handleCreateGame}
-								className="px-4 py-2 border border-purple-600 text-purple-600 rounded-md hover:bg-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
-							>
-								Crear nuevo juego
-							</button>
-						</div>
-					) : null
-				}
-        
+
+        {!isMobile && (
+          <div className="text-center">
+            <h2 className="text-lg font-semibold text-gray-700 mb-2">¿No tienes un juego?</h2>
+            <button
+              onClick={handleCreateGame}
+              className="px-4 py-2 border border-purple-600 text-purple-600 rounded-md hover:bg-purple-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
+            >
+              Crear nuevo juego
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default LoginPage
+export default LoginPage;

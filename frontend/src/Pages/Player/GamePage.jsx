@@ -10,7 +10,7 @@ const PlayerGamePage = () => {
   const [isPopped, setIsPopped] = useState(false);
 
   const sessionID = useGameStore((state) => state.sessionID);
-  const ballonLife = useGameStore((state) => state.ballonLife);
+  const balloonLife = useGameStore((state) => state.balloonLife);
   const babyGender = useGameStore((state) => state.babyGender);  // Asegúrate de obtener el género del bebé
 
   const jsConfetti = useRef(null);
@@ -23,7 +23,7 @@ const PlayerGamePage = () => {
   const handleBalloonClick = () => {
     if (!isPopped) {
       setClicks((prevClicks) => prevClicks + 1);  // Usa la función para actualizar el estado
-      if (clicks + 1 >= ballonLife) {
+      if (clicks + 1 >= balloonLife) {
         setIsPopped(true);
         jsConfetti.current.addConfetti({
           confettiColors: isBoy ? CONFETTI_FOR_BOY : CONFETTI_FOR_GIRL,
@@ -55,7 +55,7 @@ const PlayerGamePage = () => {
         >
           {!isPopped && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-white text-4xl font-bold">{ballonLife - clicks}</span>
+              <span className="text-white text-4xl font-bold">{balloonLife - clicks}</span>
             </div>
           )}
         </motion.div>

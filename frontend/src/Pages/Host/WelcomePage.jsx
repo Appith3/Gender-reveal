@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import QRCode from 'react-qr-code';
+import { Bolt } from 'lucide-react';
 
 import useGameStore from '../../store/useGameStore';
 import { createHostID } from '../../helpers/createHostID';
@@ -75,8 +76,8 @@ const WelcomePage = () => {
 				</button>
 			</main>
 			<button className="absolute top-4 left-4 border border-black hover:bg-neutral-700 hover:text-white rounded-md text-black py-2 px-4">
-				<Link to="/config" className='text-lg'>
-					⚙ Configuración
+				<Link to="/config" className='text-lg flex flex-row gap-2 justify-center items-center'>
+					<Bolt /> Configuración
 				</Link>
 			</button>
 		</div>

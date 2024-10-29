@@ -19,8 +19,16 @@ const fetchSessionData = async (sessionId) => {
 
 const createGame = async (hostId, sessionCode, sessionId) => {
   try {
+    // Verificar si ya existe un juego con el sessionId
+    const gameRef = doc(db, "games", sessionId);
+    const gameSnap = await getDoc(gameRef);
+
+    if (gameSnap.exists()) {
+      return; // Salir de la función si el juego ya existe
+    }
+
     // Crear el juego con sessionId como el ID del documento
-    await setDoc(doc(db, "games", sessionId), {
+    await setDoc(gameRef, {
       host: hostId,
       gameStatus: "waiting",
       balloonLife: 0, // Se ajustará más adelante según los jugadores
@@ -39,7 +47,6 @@ const createGame = async (hostId, sessionCode, sessionId) => {
       isActive: true,
     });
 
-    console.log("Nuevo juego creado con sessionId: ", sessionId);
   } catch (e) {
     console.error("Error al crear el juego: ", e);
   }
@@ -51,7 +58,6 @@ const updateGender = async (sessionId, gender) => {
     
     await setDoc(gameRef, { genderReveal: gender }, { merge: true });
 
-    console.log("Género actualizado a: ", gender);
   } catch (error) {
     console.error("Error al actualizar el género: ", error);
     throw error;

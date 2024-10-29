@@ -7,7 +7,6 @@ export const createSessionCode = () => {
 		dictionaries: [part1, part2],
 		separator: '-',
 	})
-	console.log('code: ', code);
 
   return code
 }

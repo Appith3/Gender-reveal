@@ -8,7 +8,6 @@ export const createHostID = () => {
 		separator: '-',
 		seed: Math.floor(100 + Math.random() * 900)
 	})
-	console.log('hostId: ', hostId)
 
 	return hostId
 }

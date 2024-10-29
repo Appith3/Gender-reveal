@@ -7,7 +7,6 @@ export const createSessionId = () => {
 		separator: '',
 		style: 'capital'
 	})
-	console.log('sessionId: ', sessionId);
 
   return sessionId
 }

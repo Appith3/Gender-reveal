@@ -13,7 +13,6 @@ import PlayerGamePage from "./Pages/Player/GamePage";
 import LoginPage from "./Pages/Host/LoginPage";
 
 const PrivateRoute = ({ element, isAuthenticated }) => {
-	console.log('isAuthenticated: ', isAuthenticated);
   return isAuthenticated ? element : <Navigate to="/" />;
 };
 

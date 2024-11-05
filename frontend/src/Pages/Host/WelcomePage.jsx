@@ -7,7 +7,8 @@ import useGameStore from '../../store/useGameStore';
 import { createHostID } from '../../helpers/createHostID';
 import { createSessionCode } from '../../helpers/createSessionCode';
 import { createSessionId } from '../../helpers/createSessionId';
-import { createGame } from '../../firebase/gameService';
+
+import { createGame, fetchGameData } from '../../firebase/gameService';
 
 const WelcomePage = () => {
 	const navigate = useNavigate();
@@ -20,14 +21,29 @@ const WelcomePage = () => {
 	const setHostId = useGameStore((state) => state.setHostId);
 	const isAuth = useGameStore((state) => state.isAuth);
 	const setIsAuth = useGameStore((state) => state.setIsAuth);
-	const [gameCreated, setGameCreated] = useState(false); // Control para evitar duplicación
+	const setGameData = useGameStore((state) => state.setGameData);
 
+	const [gameCreated, setGameCreated] = useState(false); // Control para evitar duplicación
+	const [isGameDataLoaded, setIsGameDataLoaded] = useState(false); // Control de carga de datos
+	
 	useEffect(() => {
 		// Verifica si ya está autenticado
 		if (isAuth && hostId) {
-			navigate(`/welcome/?sessionId=${sessionId}`);
-			return;
-		}
+      navigate(`/welcome/?sessionId=${sessionId}`);
+
+      // Cargar datos del juego desde Firebase y establecerlos en el store
+			if(!isGameDataLoaded) {
+				fetchGameData(sessionId).then((data) => {
+					setGameData(data);  // Actualiza el store con los datos del juego
+					setIsGameDataLoaded(true);  // Indica que los datos ya se cargaron
+					console.log('gameData:', data);  // Imprime los datos para verificar
+				}).catch((error) => {
+					console.error("Error al cargar los datos del juego: ", error);
+				});
+			}
+
+      return;
+    }
 
 		// Crear valores si no existen
 		if (!sessionCode) setSessionCode(createSessionCode());
@@ -37,7 +53,7 @@ const WelcomePage = () => {
 			setHostId(newHostId);
 			setIsAuth(true);  // Marca como autenticado
 		}
-	}, [isAuth, hostId, sessionCode, sessionId, setHostId, setIsAuth, setSessionCode, setSessionId]);
+	}, [isAuth, hostId, sessionCode, sessionId, setHostId, setIsAuth, setSessionCode, setSessionId, setGameData, isGameDataLoaded]);
 
 	useEffect(() => {
 		// Solo crear el juego una vez cuando todos los datos están listos y no se ha creado anteriormente
@@ -47,7 +63,7 @@ const WelcomePage = () => {
 		}
 	}, [hostId, sessionCode, sessionId, gameCreated]);
 
-	const qrValue = `http://${window.location.host}/`;
+	const qrValue = `http://${window.location.host}/?sessionId=${sessionId}`;
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-pink-100 to-blue-100 flex flex-col items-center justify-center p-4">

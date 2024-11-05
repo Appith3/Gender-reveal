@@ -31,8 +31,21 @@ const useGameStore = create((set) => ({
   babyGender: '',
   setBabyGender: (babyGender) => set(() => ({ babyGender: babyGender })),
 
-  balloonLife: 1,
+  balloonLife: 0,
   setBalloonLife: (life) => set(() => ({ balloonLife: life })),
+
+  gameDuration: 1,
+  setGameDuration: (duration) => set(() => ({ gameDuration: duration })),
+
+  setGameData: (gameData) => {
+    set({
+      babyGender: gameData.genderReveal || '',
+      balloonLife: gameData.balloonLife || 0,
+      gameDuration: gameData.gameDuration || 1,
+      playersCount: gameData.playersCount || 0,
+      gameStatus: gameData.gameStatus || 'waiting'
+    });
+  },
 }));
 
 export default useGameStore;

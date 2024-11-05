@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDown, Info, Heart, Eye, EyeOff } from 'lucide-react'
-import { updateGender } from '../../firebase/gameService';
+import { updateGender, updateGameDuration } from '../../firebase/gameService';
 import useGameStore from '../../store/useGameStore';
+import toast, { Toaster } from 'react-hot-toast'
 
 const ConfigPage = () => {
 	const babyGender = useGameStore((state) => state.babyGender);
@@ -9,8 +10,8 @@ const ConfigPage = () => {
 	const sessionId = useGameStore((state) => state.sessionId);
 	const hostId = useGameStore((state) => state.hostId);
 	const sessionCode = useGameStore((state) => state.sessionCode);
-	const balloonLife = useGameStore((state) => state.balloonLife);
-	const setBalloonLife = useGameStore((state) => state.setBalloonLife);
+	const gameDuration = useGameStore((state) => state.gameDuration);
+	const setGameDuration = useGameStore((state) => state.setGameDuration);
 
 	const [hideGender, setHideGender] = useState(false)
 
@@ -19,12 +20,23 @@ const ConfigPage = () => {
 			setBabyGender(gender);
 		}
 	};
-
+	
 	const saveConfiguration = () => {
 		updateGender(sessionId, babyGender);
+		updateGameDuration(sessionId, gameDuration)
+		setHideGender(true);
 
-		alert('Configuración guardada con éxito!')
+		toast.success('Configuración guardada con éxito!', {
+      duration: 3000,
+      position: 'top-center',
+    })
   };
+
+	useEffect(() => {
+		if(babyGender) {
+			setHideGender(true);
+		}
+	},[])
 
 	return (
 		<main className="min-h-screen bg-gradient-to-b from-pink-100 to-blue-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -45,7 +57,7 @@ const ConfigPage = () => {
 							disabled={hideGender}
 							aria-hidden={hideGender}
 						>
-							<img src='\images\boy.png' alt='niño' title='niño' className='w-48 h-48'/>
+							<img src='\images\boy.png' alt='niño' title='niño' className='w-32 h-32'/>
 							Niño
 						</button>
 						<button
@@ -58,7 +70,7 @@ const ConfigPage = () => {
 							disabled={hideGender}
 							aria-hidden={hideGender}
 						>
-							<img src='\images\girl.png' alt='niña' title='niña' className='w-48 h-48'/>
+							<img src='\images\girl.png' alt='niña' title='niña' className='w-32 h-32'/>
 							Niña
 						</button>
 					</div>
@@ -94,21 +106,21 @@ const ConfigPage = () => {
             La vida del globo determina la duración del juego. Cada corazón representa 3 minutos de juego.
           </p>
           <div className="flex items-center space-x-2">
-            {[1, 2, 3, 4, 5].map((life) => (
+            {[1, 2, 3, 4, 5].map((duration) => (
               <button
-                key={life}
-                onClick={() => setBalloonLife(life)} // Actualizar balloonLife en el store
+                key={duration}
+                onClick={() => setGameDuration(duration)} // Actualizar gameDuration en el store
               >
                 <Heart 
                   className={`w-8 h-8 ${
-                    life <= balloonLife ? 'text-red-500 fill-current' : 'text-gray-300'
+                    duration <= gameDuration ? 'text-red-500 fill-current' : 'text-gray-300'
                   }`} 
                 />
               </button>
             ))}
           </div>
           <p className="mt-2 text-sm text-gray-600">
-            Duración del juego: {balloonLife * 3} minutos
+            Duración del juego: {gameDuration * 3} minutos
           </p>
         </section>
 
@@ -122,6 +134,7 @@ const ConfigPage = () => {
           </button>
         </footer>
 			</div>
+			<Toaster />
 		</main>
 	);
 }

@@ -17,6 +17,22 @@ const fetchSessionData = async (sessionId) => {
   }
 };
 
+const fetchGameData = async (sessionId) => {
+  try {
+    const sessionRef = doc(db, 'games', sessionId);
+    const sessionSnap = await getDoc(sessionRef);
+
+    if (sessionSnap.exists()) {
+      return sessionSnap.data();  // Retorna los datos de la sesión
+    } else {
+      throw new Error('No se encontró un juego con ese código.');
+    }
+  } catch (error) {
+    console.error("Error al obtener los datos juego: ", error);
+    throw error;
+  }
+};
+
 const createGame = async (hostId, sessionCode, sessionId) => {
   try {
     // Verificar si ya existe un juego con el sessionId
@@ -31,11 +47,11 @@ const createGame = async (hostId, sessionCode, sessionId) => {
     await setDoc(gameRef, {
       host: hostId,
       gameStatus: "waiting",
-      balloonLife: 0, // (gameDuration * 60) * numPlayers * AverageClicksPerSecond
+      gameDuration: 0, // (gameDuration * 60) * numPlayers * AverageClicksPerSecond -> 0.5
       createdAt: Timestamp.now(),
       playersCount: 0,
       genderReveal: null,
-      gameDuration: null, // de 3 a 15 minutos
+      gameDuration: 1, // de 3 a 15 minutos
     });
 
     // Crear una sesión vinculada al juego
@@ -63,4 +79,21 @@ const updateGender = async (sessionId, gender) => {
   }
 };
 
-export { createGame, fetchSessionData, updateGender }
+const updateGameDuration = async (sessionId, duration) => {
+  try {
+    const gameRef = doc(db, "games", sessionId);
+
+    await setDoc(gameRef, { gameDuration: duration }, { merge: true });
+  } catch (error) {
+    console.error("error al guardar la duración: ", error);
+    throw error;
+  }
+}
+
+export { 
+  createGame, 
+  fetchSessionData, 
+  fetchGameData,
+  updateGender,
+  updateGameDuration
+}

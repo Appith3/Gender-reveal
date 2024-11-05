@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import QRCode from 'react-qr-code';
 import { Bolt } from 'lucide-react';
@@ -20,11 +20,12 @@ const WelcomePage = () => {
 	const setHostId = useGameStore((state) => state.setHostId);
 	const isAuth = useGameStore((state) => state.isAuth);
 	const setIsAuth = useGameStore((state) => state.setIsAuth);
+	const [gameCreated, setGameCreated] = useState(false); // Control para evitar duplicación
 
 	useEffect(() => {
 		// Verifica si ya está autenticado
 		if (isAuth && hostId) {
-			navigate(`/welcome/?sessionId=${sessionId}`)
+			navigate(`/welcome/?sessionId=${sessionId}`);
 			return;
 		}
 
@@ -39,10 +40,12 @@ const WelcomePage = () => {
 	}, [isAuth, hostId, sessionCode, sessionId, setHostId, setIsAuth, setSessionCode, setSessionId]);
 
 	useEffect(() => {
-		if (hostId && sessionCode && sessionId) {
+		// Solo crear el juego una vez cuando todos los datos están listos y no se ha creado anteriormente
+		if (!gameCreated && hostId && sessionCode && sessionId) {
 			createGame(hostId, sessionCode, sessionId);
+			setGameCreated(true); // Marcar el juego como creado para evitar duplicación
 		}
-	}, [hostId, sessionCode, sessionId]);
+	}, [hostId, sessionCode, sessionId, gameCreated]);
 
 	const qrValue = `http://${window.location.host}/`;
 

@@ -63,7 +63,8 @@ const WelcomePage = () => {
 		}
 	}, [hostId, sessionCode, sessionId, gameCreated]);
 
-	const qrValue = `http://${window.location.host}/?sessionId=${sessionId}`;
+	const isDev = import.meta.env.VITE_ENV === 'dev'
+	const qrValue = isDev ? `http://${import.meta.env.VITE_IP}:5173/?sessionId=${sessionId}` : `http://${window.location.host}/?sessionId=${sessionId}`;
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-pink-100 to-blue-100 flex flex-col items-center justify-center p-4">

@@ -14,6 +14,7 @@ const ConfigPage = () => {
 	const setGameDuration = useGameStore((state) => state.setGameDuration);
 
 	const [hideGender, setHideGender] = useState(false)
+	const isDev = import.meta.env.VITE_ENV === 'dev'
 
 	const handleClickGenderButton = (gender) => {
 		if(!hideGender) {
@@ -74,19 +75,26 @@ const ConfigPage = () => {
 							Niña
 						</button>
 					</div>
-					<div className="flex items-center">
-						<input
-							type="checkbox"
-							id="hideGender"
-							checked={hideGender}
-							onChange={(e) => setHideGender(e.target.checked)}
-							className="mr-2"
-						/>
-						<label htmlFor="hideGender" className="text-sm text-gray-600 flex items-center">
-							{hideGender ? <EyeOff className="w-4 h-4 mr-1" /> : <Eye className="w-4 h-4 mr-1" />}
-							{hideGender ? 'Ocultar género' : 'Mostrar género'}
-						</label>
-					</div>
+
+					{
+						isDev 
+						? (
+							<div className="flex items-center">
+								<input
+									type="checkbox"
+									id="hideGender"
+									checked={hideGender}
+									onChange={(e) => setHideGender(e.target.checked)}
+									className="mr-2"
+								/>
+								<label htmlFor="hideGender" className="text-sm text-gray-600 flex items-center">
+									{hideGender ? <EyeOff className="w-4 h-4 mr-1" /> : <Eye className="w-4 h-4 mr-1" />}
+									{hideGender ? 'Ocultar género' : 'Mostrar género'}
+								</label>
+							</div>
+						)
+						: null
+					}
 				</section>
 				
 				{/* Sección de información de la sesión */}

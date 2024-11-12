@@ -46,6 +46,20 @@ const useGameStore = create((set) => ({
       gameStatus: gameData.gameStatus || 'waiting'
     });
   },
+
+  resetGameDate: () => {
+    set({
+      isAuth: false,
+      hostId: '',
+      sessionId: '', 
+      sessionCode: '', 
+      babyGender: '',
+      balloonLife: 0,
+      gameDuration: 1,
+      playersCount: 0,
+      gameStatus: 'waiting'
+    });
+  },
 }));
 
 export default useGameStore;

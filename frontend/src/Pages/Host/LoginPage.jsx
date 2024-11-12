@@ -21,7 +21,9 @@ const LoginPage = () => {
           const sessionData = await fetchSessionData(storedSessionId);
           setSessionId(sessionData.gameId);
           setIsAuth(true);
-          navigate(`/welcome/?sessionId=${sessionData.gameId}`);
+          !isMobile 
+            ? navigate(`/welcome/?sessionId=${sessionData.gameId}`)
+            : navigate(`/config`);
         } catch (error) {
           setError('Error al cargar la sesión. Verifica el código.');
         }
@@ -52,10 +54,10 @@ const LoginPage = () => {
     <div className="min-h-screen bg-gradient-to-b from-purple-100 to-pink-100 flex flex-col items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">Revelación de Género</h1>
-        <p className="text-center text-gray-600 mb-6">¡Bienvenido a nuestro juego especial!</p>
+        <p className="text-center text-gray-600 mb-6">Configuración</p>
 
         <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-700 mb-2">¿Ya tienes un código de sesión?</h2>
+          <h2 className="text-lg font-semibold text-gray-700 mb-2">Ingresa tu código de sesión</h2>
           <div className="flex md:flex-row flex-col md:space-x-2 space-y-2">
             <input
               type="text"

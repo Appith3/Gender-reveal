@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { ChevronDown, Info, Heart, Eye, EyeOff } from 'lucide-react'
+import { Heart, Eye, EyeOff } from 'lucide-react'
 import { updateGender, updateGameDuration } from '../../firebase/gameService';
 import useGameStore from '../../store/useGameStore';
-import toast, { Toaster } from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const ConfigPage = () => {
 	const babyGender = useGameStore((state) => state.babyGender);
@@ -12,9 +13,11 @@ const ConfigPage = () => {
 	const sessionCode = useGameStore((state) => state.sessionCode);
 	const gameDuration = useGameStore((state) => state.gameDuration);
 	const setGameDuration = useGameStore((state) => state.setGameDuration);
+	const resetGameDate = useGameStore((state) => state.resetGameDate);
 
-	const [hideGender, setHideGender] = useState(false)
-	const isDev = import.meta.env.VITE_ENV === 'dev'
+	const [hideGender, setHideGender] = useState(false);
+	const isDev = import.meta.env.VITE_ENV === 'dev';
+  const navigate = useNavigate();
 
 	const handleClickGenderButton = (gender) => {
 		if(!hideGender) {
@@ -32,6 +35,16 @@ const ConfigPage = () => {
       position: 'top-center',
     })
   };
+
+	const logout = () => {
+		localStorage.removeItem('hostId');
+		localStorage.removeItem('sessionId');
+		localStorage.removeItem('sessionCode');
+		localStorage.setItem('isAuth', 'false');
+
+		resetGameDate();
+		navigate(`/`);
+	}
 
 	useEffect(() => {
 		if(babyGender) {
@@ -133,12 +146,18 @@ const ConfigPage = () => {
         </section>
 
 				{/* Botón para guardar la configuración */}
-        <footer className="mt-6">
+        <footer className="mt-6 flex flex-col gap-4">
           <button
             onClick={saveConfiguration}
             className="w-full bg-green-500 text-white py-2 px-4 rounded-md font-medium hover:bg-green-600 transition-colors"
           >
             Guardar Configuración
+          </button>
+					<button
+            onClick={logout}
+            className="w-full border border-green-500 text-black py-2 px-4 rounded-md font-medium hover:bg-green-600 transition-colors"
+          >
+            cerrar sesión
           </button>
         </footer>
 			</div>

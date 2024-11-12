@@ -1,5 +1,19 @@
-import { collection, doc, setDoc, Timestamp, getDoc } from "firebase/firestore";
+import { onSnapshot, doc, setDoc, Timestamp, getDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
+
+const listenToGameChanges = (gameId, callback) => {
+  const gameRef = doc(db, 'games', gameId);
+
+  const unsubscribe = onSnapshot(gameRef, (snapshot) => {
+    if (snapshot.exists()) {
+      callback(snapshot.data());  // Retorna los datos actualizados
+    } else {
+      console.error('No se encontró el juego con ese ID.');
+    }
+  });
+
+  return unsubscribe;  // Llamar a unsubscribe() detiene la escucha
+};
 
 const fetchSessionData = async (sessionId) => {
   try {
@@ -19,11 +33,17 @@ const fetchSessionData = async (sessionId) => {
 
 const fetchGameData = async (sessionId) => {
   try {
-    const sessionRef = doc(db, 'games', sessionId);
+    const gameRef = doc(db, 'games', sessionId);
+    const gameSnap = await getDoc(gameRef);
+
+    const sessionRef = doc(db, 'sessions', sessionId);
     const sessionSnap = await getDoc(sessionRef);
 
-    if (sessionSnap.exists()) {
-      return sessionSnap.data();  // Retorna los datos de la sesión
+    if (gameSnap.exists() && sessionSnap.exists()) {
+      return {
+        game: gameSnap.data(),
+        session: sessionSnap.data()
+      }; 
     } else {
       throw new Error('No se encontró un juego con ese código.');
     }
@@ -88,12 +108,29 @@ const updateGameDuration = async (sessionId, duration) => {
     console.error("error al guardar la duración: ", error);
     throw error;
   }
-}
+};
+
+const listenToPlayersChanges = (gameId, callback) => {
+  const db = getFirestore();
+  const playersRef = collection(db, 'games', gameId, 'players');
+  // TODO: cambiar a lógica de playersCount
+  const unsubscribe = onSnapshot(playersRef, (snapshot) => {
+    const players = [];
+    snapshot.forEach((doc) => {
+      players.push({ id: doc.id, ...doc.data() });
+    });
+    callback(players);  // Retorna la lista de jugadores actualizada
+  });
+
+  return unsubscribe;
+};
 
 export { 
+  listenToGameChanges,
   createGame, 
   fetchSessionData, 
   fetchGameData,
   updateGender,
-  updateGameDuration
+  updateGameDuration,
+  listenToPlayersChanges
 }

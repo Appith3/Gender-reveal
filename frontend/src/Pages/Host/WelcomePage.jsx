@@ -36,7 +36,6 @@ const WelcomePage = () => {
 				fetchGameData(sessionId).then((data) => {
 					setGameData(data);  // Actualiza el store con los datos del juego
 					setIsGameDataLoaded(true);  // Indica que los datos ya se cargaron
-					console.log('gameData:', data);  // Imprime los datos para verificar
 				}).catch((error) => {
 					console.error("Error al cargar los datos del juego: ", error);
 				});
@@ -64,7 +63,7 @@ const WelcomePage = () => {
 	}, [hostId, sessionCode, sessionId, gameCreated]);
 
 	const isDev = import.meta.env.VITE_ENV === 'dev'
-	const qrValue = isDev ? `http://${import.meta.env.VITE_IP}:5173/?sessionId=${sessionId}` : `http://${window.location.host}/?sessionId=${sessionId}`;
+	const qrValue = isDev ? `http://${import.meta.env.VITE_IP}:5173/?session=${sessionId}&code=${sessionCode}` : `http://${window.location.host}/?session=${sessionId}&code=${sessionCode}`;
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-pink-100 to-blue-100 flex flex-col items-center justify-center p-4">

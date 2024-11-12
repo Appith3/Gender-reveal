@@ -38,12 +38,16 @@ const useGameStore = create((set) => ({
   setGameDuration: (duration) => set(() => ({ gameDuration: duration })),
 
   setGameData: (gameData) => {
+    const {game, session} = gameData
     set({
-      babyGender: gameData.genderReveal || '',
-      balloonLife: gameData.balloonLife || 0,
-      gameDuration: gameData.gameDuration || 1,
-      playersCount: gameData.playersCount || 0,
-      gameStatus: gameData.gameStatus || 'waiting'
+      hostId: game.host || '',
+      sessionId: session.sessionId || '', 
+      sessionCode: session.sessionCode || '', 
+      babyGender: game.genderReveal || '',
+      balloonLife: game.balloonLife || 0,
+      gameDuration: game.gameDuration || 1,
+      playersCount: game.playersCount || 0,
+      gameStatus: game.gameStatus || 'waiting'
     });
   },
 

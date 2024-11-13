@@ -9,3 +9,4 @@
 	[ ] en mobile 
 [ ] cambios en tiempo real
 [ ] Si no inicio sesión e intenta acceder a cualquier ruta debe re-direccionar a '/'
+[ ] Revisar funcionalidad de Host/GamePage.jsx

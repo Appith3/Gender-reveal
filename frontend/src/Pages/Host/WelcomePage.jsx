@@ -8,7 +8,7 @@ import { createHostID } from '../../helpers/createHostID';
 import { createSessionCode } from '../../helpers/createSessionCode';
 import { createSessionId } from '../../helpers/createSessionId';
 
-import { createGame, fetchGameData } from '../../firebase/gameService';
+import { createGame, fetchGameAndSessionData } from '../../firebase/gameService';
 
 const WelcomePage = () => {
 	const navigate = useNavigate();
@@ -23,19 +23,17 @@ const WelcomePage = () => {
 	const setIsAuth = useGameStore((state) => state.setIsAuth);
 	const setGameData = useGameStore((state) => state.setGameData);
 
-	const [gameCreated, setGameCreated] = useState(false); // Control para evitar duplicación
-	const [isGameDataLoaded, setIsGameDataLoaded] = useState(false); // Control de carga de datos
+	const [gameCreated, setGameCreated] = useState(false);
+	const [isGameDataLoaded, setIsGameDataLoaded] = useState(false);
 	
 	useEffect(() => {
-		// Verifica si ya está autenticado
 		if (isAuth && hostId) {
       navigate(`/welcome/?sessionId=${sessionId}`);
 
-      // Cargar datos del juego desde Firebase y establecerlos en el store
 			if(!isGameDataLoaded) {
-				fetchGameData(sessionId).then((data) => {
-					setGameData(data);  // Actualiza el store con los datos del juego
-					setIsGameDataLoaded(true);  // Indica que los datos ya se cargaron
+				fetchGameAndSessionData(sessionId).then((data) => {
+					setGameData(data);
+					setIsGameDataLoaded(true);
 				}).catch((error) => {
 					console.error("Error al cargar los datos del juego: ", error);
 				});
@@ -44,21 +42,19 @@ const WelcomePage = () => {
       return;
     }
 
-		// Crear valores si no existen
 		if (!sessionCode) setSessionCode(createSessionCode());
 		if (!sessionId) setSessionId(createSessionId());
 		if (!hostId) {
 			const newHostId = createHostID();
 			setHostId(newHostId);
-			setIsAuth(true);  // Marca como autenticado
+			setIsAuth(true);
 		}
 	}, [isAuth, hostId, sessionCode, sessionId, setHostId, setIsAuth, setSessionCode, setSessionId, setGameData, isGameDataLoaded]);
 
 	useEffect(() => {
-		// Solo crear el juego una vez cuando todos los datos están listos y no se ha creado anteriormente
 		if (!gameCreated && hostId && sessionCode && sessionId) {
 			createGame(hostId, sessionCode, sessionId);
-			setGameCreated(true); // Marcar el juego como creado para evitar duplicación
+			setGameCreated(true);
 		}
 	}, [hostId, sessionCode, sessionId, gameCreated]);
 

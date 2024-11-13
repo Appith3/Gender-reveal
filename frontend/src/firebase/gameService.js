@@ -36,6 +36,22 @@ const fetchGameData = async (sessionId) => {
     const gameRef = doc(db, 'games', sessionId);
     const gameSnap = await getDoc(gameRef);
 
+    if (gameSnap.exists()) {
+      return gameSnap.data();
+    } else {
+      throw new Error('No se encontró un juego con ese código.');
+    }
+  } catch (error) {
+    console.error("Error al obtener el juego: ", error);
+    throw error;
+  }
+};
+
+const fetchGameAndSessionData = async (sessionId) => {
+  try {
+    const gameRef = doc(db, 'games', sessionId);
+    const gameSnap = await getDoc(gameRef);
+
     const sessionRef = doc(db, 'sessions', sessionId);
     const sessionSnap = await getDoc(sessionRef);
 
@@ -128,8 +144,9 @@ const listenToPlayersChanges = (gameId, callback) => {
 export { 
   listenToGameChanges,
   createGame, 
-  fetchSessionData, 
+  fetchSessionData,
   fetchGameData,
+  fetchGameAndSessionData,
   updateGender,
   updateGameDuration,
   listenToPlayersChanges

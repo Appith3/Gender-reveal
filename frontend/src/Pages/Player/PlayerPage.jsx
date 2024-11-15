@@ -10,6 +10,7 @@ const PlayerPage = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 
+	// TODO: Hacer LogIn con sessionId y sessionCode para las personas que no puedan acceder con QR
 	useEffect(() => {
 		// Obtén el sessionId de los parámetros de la URL
 		const params = location.search;
@@ -38,7 +39,7 @@ const PlayerPage = () => {
 					setIsValidSession(false);
 				});
 		}
-}, [location.search]);
+	}, [location.search]);
 
 	const handlePlayClick = () => {
 		if(isValidSession) {

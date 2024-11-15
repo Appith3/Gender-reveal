@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchSessionData } from '../../firebase/gameService';
+import { fetchGameAndSessionData } from '../../firebase/gameService';
 import useGameStore from '../../store/useGameStore';
 
 const LoginPage = () => {
@@ -11,6 +11,7 @@ const LoginPage = () => {
   const sessionId = useGameStore((state) => state.sessionId);
   const setIsAuth = useGameStore((state) => state.setIsAuth);
   const isMobile = useGameStore((state) => state.isMobile);
+  const setGameData = useGameStore((state) => state.setGameData);
   const storedSessionId = localStorage.getItem('sessionId'); // Recupera el sessionId desde localStorage
 
   useEffect(() => {
@@ -18,11 +19,13 @@ const LoginPage = () => {
     const autoLogin = async () => {
       if (storedSessionId) {
         try {
-          const sessionData = await fetchSessionData(storedSessionId);
-          setSessionId(sessionData.gameId);
+          const gameData = await fetchGameAndSessionData(storedSessionId);
+          const { session } = gameData
+
+          setGameData(gameData);
           setIsAuth(true);
           !isMobile 
-            ? navigate(`/welcome/?sessionId=${sessionData.gameId}`)
+            ? navigate(`/welcome/?sessionId=${session.gameId}`)
             : navigate(`/config`);
         } catch (error) {
           setError('Error al cargar la sesión. Verifica el código.');
@@ -34,12 +37,14 @@ const LoginPage = () => {
 
   const handleJoinSession = async () => {
     try {
-      const sessionData = await fetchSessionData(sessionId);
+      const gameData = await fetchGameAndSessionData(sessionId);
+      const { session } = gameData
+      setGameData(gameData);
       setIsAuth(true);
       // Guarda el sessionId en localStorage para futuras visitas
-      localStorage.setItem('sessionId', sessionData.gameId);
+      localStorage.setItem('sessionId', session.gameId);
       !isMobile
-        ? navigate(`/welcome/?sessionId=${sessionData.gameId}`)
+        ? navigate(`/welcome/?sessionId=${session.gameId}`)
         : navigate(`/config`);
     } catch (error) {
       setError(error.message);

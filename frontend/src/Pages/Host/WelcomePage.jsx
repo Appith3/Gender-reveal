@@ -21,24 +21,12 @@ const WelcomePage = () => {
 	const setHostId = useGameStore((state) => state.setHostId);
 	const isAuth = useGameStore((state) => state.isAuth);
 	const setIsAuth = useGameStore((state) => state.setIsAuth);
-	const setGameData = useGameStore((state) => state.setGameData);
 
 	const [gameCreated, setGameCreated] = useState(false);
-	const [isGameDataLoaded, setIsGameDataLoaded] = useState(false);
 	
 	useEffect(() => {
 		if (isAuth && hostId) {
       navigate(`/welcome/?sessionId=${sessionId}`);
-
-			if(!isGameDataLoaded) {
-				fetchGameAndSessionData(sessionId).then((data) => {
-					setGameData(data);
-					setIsGameDataLoaded(true);
-				}).catch((error) => {
-					console.error("Error al cargar los datos del juego: ", error);
-				});
-			}
-
       return;
     }
 
@@ -49,7 +37,7 @@ const WelcomePage = () => {
 			setHostId(newHostId);
 			setIsAuth(true);
 		}
-	}, [isAuth, hostId, sessionCode, sessionId, setHostId, setIsAuth, setSessionCode, setSessionId, setGameData, isGameDataLoaded]);
+	}, [isAuth, hostId, sessionCode, sessionId, setHostId, setIsAuth, setSessionCode, setSessionId]);
 
 	useEffect(() => {
 		if (!gameCreated && hostId && sessionCode && sessionId) {

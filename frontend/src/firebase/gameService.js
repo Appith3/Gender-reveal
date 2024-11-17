@@ -1,4 +1,4 @@
-import { onSnapshot, doc, setDoc, Timestamp, getDoc } from "firebase/firestore";
+import { onSnapshot, doc, setDoc, Timestamp, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
 const listenToGameChanges = (gameId, callback) => {
@@ -88,6 +88,7 @@ const createGame = async (hostId, sessionCode, sessionId) => {
       playersCount: 0,
       genderReveal: null,
       gameDuration: 1, // de 3 a 15 minutos
+      isPopped: false
     });
 
     // Crear una sesión vinculada al juego
@@ -126,20 +127,78 @@ const updateGameDuration = async (sessionId, duration) => {
   }
 };
 
-const listenToPlayersChanges = (gameId, callback) => {
-  const db = getFirestore();
-  const playersRef = collection(db, 'games', gameId, 'players');
-  // TODO: cambiar a lógica de playersCount
-  const unsubscribe = onSnapshot(playersRef, (snapshot) => {
-    const players = [];
-    snapshot.forEach((doc) => {
-      players.push({ id: doc.id, ...doc.data() });
-    });
-    callback(players);  // Retorna la lista de jugadores actualizada
-  });
+const updateGameStatus = async (sessionId, status) => {
+  try {
+    const gameRef = doc(db, "games", sessionId);
 
-  return unsubscribe;
+    await updateDoc(gameRef, { gameStatus: status });
+  } catch (error) {
+    console.error("error al guardar el estatus del juego: ", error);
+    throw error
+  }
+}
+
+const updateGamePlayersCount = async (gameId) => {
+  const gameRef = doc(db, "games", gameId);
+  
+  try {
+    // Obtener datos actuales del juego
+    const gameSnap = await getDoc(gameRef);
+    if (!gameSnap.exists()) {
+      throw new Error("El juego no existe");
+    }
+
+    const gameData = gameSnap.data();
+    const { gameDuration, playersCount = 0 } = gameData;
+
+    // Calcular nuevos valores
+    const newPlayersCount = playersCount + 1;
+    const balloonLife = ((gameDuration * 3) * 60) * 0.5 * newPlayersCount;
+
+    // Actualizar en la base de datos
+    await updateDoc(gameRef, {
+      playersCount: newPlayersCount,
+      balloonLife,
+    });
+    return { playersCount: newPlayersCount, balloonLife };
+  } catch (error) {
+    console.error("Error al actualizar playersCount: ", error);
+    throw error;
+  }
 };
+
+const setTotalBallonLife = async (gameId, ballonLife) => {
+  try{
+    const gameRef = doc(db, "games", gameId);
+    
+    await setDoc(gameRef, { totalBalloonLife: ballonLife }, { merge: true });
+  } catch (error) {
+    console.error("error al establecer totalBalloonLife: ", error);
+    throw error;
+  }
+}
+
+const updateBalloonLife = async (sessionId, newBalloonLife) => {
+  try {
+    const gameRef = doc(db, 'games', sessionId);  // Obtén la referencia del documento del juego
+    await updateDoc(gameRef, {
+      balloonLife: newBalloonLife,
+    });
+  } catch (error) {
+    console.error('Error al actualizar la vida del globo: ', error);
+  }
+};
+
+const updateIsPoppedToTrue = async (sessionId) => {
+  try {
+    const gameRef = doc(db, 'games', sessionId);  // Obtén la referencia del documento del juego
+    await updateDoc(gameRef, {
+      isPopped: true,
+    });
+  } catch (error) {
+    console.error('Error al actualizar la vida del globo: ', error);
+  }
+}
 
 export { 
   listenToGameChanges,
@@ -149,5 +208,9 @@ export {
   fetchGameAndSessionData,
   updateGender,
   updateGameDuration,
-  listenToPlayersChanges
+  updateGamePlayersCount,
+  updateGameStatus,
+  setTotalBallonLife,
+  updateBalloonLife,
+  updateIsPoppedToTrue
 }

@@ -1,51 +1,62 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Sonography from '../../assets/SVGs/Sonography';
-import { fetchSessionData } from '../../firebase/gameService'; 
+import { fetchSessionData, updateGamePlayersCount } from '../../firebase/gameService'; 
 
 const PlayerPage = () => {
 	const [sessionCode, setSessionCode] = useState('');
+	const [sessionId, setSessionId] = useState('');
+	const [gameId, setGameId] = useState('');
 	const [isValidSession, setIsValidSession] = useState(false);
-	const [error, setError] = useState();
+	const [error, setError] = useState('');
 	const navigate = useNavigate();
 	const location = useLocation();
 
-	// TODO: Hacer LogIn con sessionId y sessionCode para las personas que no puedan acceder con QR
+	// Validar sesión al cargar la página
 	useEffect(() => {
-		// Obtén el sessionId de los parámetros de la URL
 		const params = location.search;
+		const [sessionIdParam, sessionCodeParam] = params.split('&').map(param => param.split('=')[1]);
 		
-		const [sessionId, _sessionCode] = params.split('&').map(param => param.split('=')[1]);
-		_sessionCode && setSessionCode(_sessionCode)
+		if (sessionCodeParam) setSessionCode(sessionCodeParam);
+		if (sessionIdParam) setSessionId(sessionIdParam);
 
-		if (sessionId) {
-			// Verifica la sesión usando fetchSessionData
-			fetchSessionData(sessionId)
+		if (sessionIdParam) {
+			fetchSessionData(sessionIdParam)
 				.then((data) => {
-					const { isActive, sessionId: id, sessionCode: code} = data;
+					const { isActive, sessionId: id, sessionCode: code, gameId } = data;
 
-					if( isActive ) {
-						if(id === sessionId && code === _sessionCode) {
+					if (isActive) {
+						if (id === sessionIdParam && code === sessionCodeParam) {
 							setIsValidSession(true);
+							setGameId(gameId); // Guardar el gameId para actualizar playersCount
 						} else {
-							setError('Código de sesión inválido. Inténtalo de nuevo.')
+							setError('Código de sesión inválido. Inténtalo de nuevo.');
 						}
 					} else {
-						setError('La sesión a la que deseas ingresar se encuentra inactiva ')
+						setError('La sesión a la que deseas ingresar está inactiva.');
 					}
 				})
 				.catch((error) => {
 					console.error("Error al validar la sesión: ", error);
 					setIsValidSession(false);
+					setError('Error al validar la sesión. Intenta de nuevo.');
 				});
 		}
 	}, [location.search]);
 
-	const handlePlayClick = () => {
-		if(isValidSession) {
-			navigate('/game');
+	// Manejar clic en "Jugar"
+	const handlePlayClick = async () => {
+		if (isValidSession && gameId) {
+			try {
+				// Actualizar playersCount y recalcular balloonLife
+				await updateGamePlayersCount(gameId);
+				navigate(`/game/?sessionId=${gameId}`); // Redirigir al juego si la operación es exitosa
+			} catch (error) {
+				console.error("Error al actualizar el juego:", error);
+				setError('No se pudo iniciar el juego. Inténtalo de nuevo.');
+			}
 		} else {
-			setError('Sesión no encontrada')
+			setError('Sesión no encontrada o inválida.');
 		}
 	};
 
@@ -86,7 +97,7 @@ const PlayerPage = () => {
 						Jugar
 					</button>
 
-					{!isValidSession && <span className="text-red-500">{error}</span>}
+					{error && <span className="text-red-500">{error}</span>}
 				</div>
 
 				<Link to='/login' className='py-2 px-4 min-w-full rounded-md border border-black lg:hover:bg-neutral-700 text-base lg:text-lg text-center'>

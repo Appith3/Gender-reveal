@@ -11,7 +11,7 @@ const LoginPage = () => {
   const sessionId = useGameStore((state) => state.sessionId);
   const setIsAuth = useGameStore((state) => state.setIsAuth);
   const isMobile = useGameStore((state) => state.isMobile);
-  const setGameData = useGameStore((state) => state.setGameData);
+  const setGameAndSessionData = useGameStore((state) => state.setGameAndSessionData);
   const storedSessionId = localStorage.getItem('sessionId'); // Recupera el sessionId desde localStorage
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const LoginPage = () => {
           const gameData = await fetchGameAndSessionData(storedSessionId);
           const { session } = gameData
 
-          setGameData(gameData);
+          setGameAndSessionData(gameData);
           setIsAuth(true);
           !isMobile 
             ? navigate(`/welcome/?sessionId=${session.gameId}`)
@@ -39,7 +39,7 @@ const LoginPage = () => {
     try {
       const gameData = await fetchGameAndSessionData(sessionId);
       const { session } = gameData
-      setGameData(gameData);
+      setGameAndSessionData(gameData);
       setIsAuth(true);
       // Guarda el sessionId en localStorage para futuras visitas
       localStorage.setItem('sessionId', session.gameId);

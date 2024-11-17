@@ -34,10 +34,22 @@ const useGameStore = create((set) => ({
   balloonLife: 0,
   setBalloonLife: (life) => set(() => ({ balloonLife: life })),
 
+  totalBalloonLife: 0,
+  setTotalBalloonLife: (total) => set(() => ({ totalBalloonLife: total})),
+
+  isPopped: false,
+  setIsPopped: (isPopped) => set(() => set(() => ({ isPopped }))),
+
   gameDuration: 1,
   setGameDuration: (duration) => set(() => ({ gameDuration: duration })),
 
-  setGameData: (gameData) => {
+  playersCount: 0,
+  setPlayersCount: (counter) => set(() => ({ playersCount: counter })),
+
+  gameStatus: 'waiting',
+  setGameStatus: (status) => set(() => ({ gameStatus: status })), 
+
+  setGameAndSessionData: (gameData) => {
     const {game, session} = gameData
     set({
       hostId: game.host || '',
@@ -47,7 +59,21 @@ const useGameStore = create((set) => ({
       balloonLife: game.balloonLife || 0,
       gameDuration: game.gameDuration || 1,
       playersCount: game.playersCount || 0,
-      gameStatus: game.gameStatus || 'waiting'
+      gameStatus: game.gameStatus || 'waiting',
+      isPopped: game.isPopped || false
+    });
+  },
+
+  setGameData: (gameData) => {    
+    set({
+      hostId: gameData.host || '',
+      babyGender: gameData.genderReveal || '',
+      totalBalloonLife: gameData.totalBalloonLife || 0,
+      balloonLife: gameData.balloonLife || 0,
+      gameDuration: gameData.gameDuration || 1,
+      playersCount: gameData.playersCount || 0,
+      gameStatus: gameData.gameStatus || 'waiting',
+      isPopped: gameData.isPopped || false
     });
   },
 

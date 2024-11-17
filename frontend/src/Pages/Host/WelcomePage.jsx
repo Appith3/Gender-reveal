@@ -4,26 +4,51 @@ import QRCode from 'react-qr-code';
 import { Bolt } from 'lucide-react';
 
 import useGameStore from '../../store/useGameStore';
+import { createHostID } from '../../helpers/createHostID';
+import { createSessionCode } from '../../helpers/createSessionCode';
+import { createSessionId } from '../../helpers/createSessionId';
 
-import { listenToGameChanges, updateGameStatus, setTotalBallonLife } from '../../firebase/gameService';
+import { listenToGameChanges, updateGameStatus, setTotalBallonLife, createGame } from '../../firebase/gameService';
 
 const WelcomePage = () => {
 	const navigate = useNavigate();
 
 	const sessionId = useGameStore((state) => state.sessionId);
+	const setSessionId = useGameStore((state) => state.setSessionId);
 	const sessionCode = useGameStore((state) => state.sessionCode);
+	const setSessionCode = useGameStore((state) => state.setSessionCode);
 	const hostId = useGameStore((state) => state.hostId);
+	const setHostId = useGameStore((state) => state.setHostId);
 	const isAuth = useGameStore((state) => state.isAuth);
-	const playersCount = useGameStore((state) => state.playersCount);
-	const balloonLife = useGameStore((state) => state.balloonLife);
+	const setIsAuth = useGameStore((state) => state.setIsAuth);
 	const setGameData = useGameStore((state) => state.setGameData);
+	const balloonLife = useGameStore((state) => state.balloonLife);
+	const playersCount = useGameStore((state) => state.playersCount);
+
+	const [gameCreated, setGameCreated] = useState(false);
 	
+	// FIXME: error al crear el juego, primero pantalla en blanco y al actualizar la pagina se crea un juego
 	useEffect(() => {
 		if (isAuth && hostId) {
       navigate(`/welcome/?sessionId=${sessionId}`);
       return;
     }
-	}, []);
+
+		if (!sessionCode) setSessionCode(createSessionCode());
+		if (!sessionId) setSessionId(createSessionId());
+		if (!hostId) {
+			const newHostId = createHostID();
+			setHostId(newHostId);
+			setIsAuth(true);
+		}
+	}, [isAuth, hostId, sessionCode, sessionId, setHostId, setIsAuth, setSessionCode, setSessionId]);
+
+	useEffect(() => {
+		if (!gameCreated && hostId && sessionCode && sessionId) {
+			createGame(hostId, sessionCode, sessionId);
+			setGameCreated(true);
+		}
+	}, [hostId, sessionCode, sessionId, gameCreated]);
 
 	useEffect(() => {
 		const updateGameData = (gameData) => {

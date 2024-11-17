@@ -70,6 +70,9 @@ const fetchGameAndSessionData = async (sessionId) => {
 };
 
 const createGame = async (hostId, sessionCode, sessionId) => {
+  console.log('sessionId: ', sessionId);
+  console.log('sessionCode: ', sessionCode);
+  console.log('hostId: ', hostId);
   try {
     // Verificar si ya existe un juego con el sessionId
     const gameRef = doc(db, "games", sessionId);

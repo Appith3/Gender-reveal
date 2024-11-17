@@ -8,6 +8,7 @@
 	[X] en web
 	[X] en mobile
 [X] guardar datos en store desde mobile
-[ ] cambios en tiempo real
+[X] cambios en tiempo real
 [ ] Si no inicio sesión e intenta acceder a cualquier ruta debe re-direccionar a '/'
 [ ] Revisar funcionalidad de Host/GamePage.jsx
+[ ] implementar que cunado el usuario salga de la pantalla se reste 1 a playersCount

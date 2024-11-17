@@ -52,6 +52,7 @@ const LoginPage = () => {
   };
 
   const handleCreateGame = () => {
+    // TODO: implementar logica para crear juego 
     navigate('/welcome');
   };
 
